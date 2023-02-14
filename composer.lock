@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0d2dbc473e10612d9e38bd92b3e061c",
+    "content-hash": "a93e54a05d7fe31afd51a339e7cada55",
     "packages": [
         {
             "name": "botman/botman",
@@ -82,6 +82,63 @@
                 "chatbot"
             ],
             "time": "2018-08-09T13:15:19+00:00"
+        },
+        {
+            "name": "botman/driver-telegram",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/botman/driver-telegram.git",
+                "reference": "b681bf94a8e1537c385a34131e8de8075c3866c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/botman/driver-telegram/zipball/b681bf94a8e1537c385a34131e8de8075c3866c8",
+                "reference": "b681bf94a8e1537c385a34131e8de8075c3866c8",
+                "shasum": ""
+            },
+            "require": {
+                "botman/botman": "^2.0",
+                "ext-curl": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "botman/studio-addons": "^1.0",
+                "illuminate/contracts": "^5.5",
+                "mockery/mockery": "^1.1",
+                "phpunit/phpunit": "^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BotMan\\Drivers\\Telegram\\Providers\\TelegramServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BotMan\\Drivers\\Telegram\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel Pociot",
+                    "email": "m.pociot@gmail.com"
+                }
+            ],
+            "description": "Telegram driver for BotMan",
+            "homepage": "http://github.com/botman/driver-telegram",
+            "keywords": [
+                "Botman",
+                "bot",
+                "telegram"
+            ],
+            "time": "2022-07-15T07:44:14+00:00"
         },
         {
             "name": "botman/driver-web",
@@ -1054,6 +1111,7 @@
                     "homepage": "http://www.acci.cz"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2014-04-08T15:00:19+00:00"
         },
         {
@@ -1098,6 +1156,7 @@
                     "homepage": "http://www.acci.cz/"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2015-04-20T18:58:01+00:00"
         },
         {
@@ -2489,6 +2548,7 @@
                 "mail",
                 "mailer"
             ],
+            "abandoned": "symfony/mailer",
             "time": "2018-09-11T07:12:52+00:00"
         },
         {
@@ -2666,6 +2726,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
+            "abandoned": "symfony/error-handler",
             "time": "2018-08-03T11:13:38+00:00"
         },
         {
@@ -3425,12 +3486,12 @@
             "version": "v5.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tightenco/collect.git",
+                "url": "https://github.com/tighten/collect.git",
                 "reference": "87c1e7eb0a2252748fa2fc1824e97f2fc892788f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/87c1e7eb0a2252748fa2fc1824e97f2fc892788f",
+                "url": "https://api.github.com/repos/tighten/collect/zipball/87c1e7eb0a2252748fa2fc1824e97f2fc892788f",
                 "reference": "87c1e7eb0a2252748fa2fc1824e97f2fc892788f",
                 "shasum": ""
             },
@@ -5332,5 +5393,6 @@
     "platform": {
         "php": "^7.1.3"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
