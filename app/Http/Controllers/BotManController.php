@@ -11,6 +11,9 @@ class BotManController extends Controller
     /**
      * Place your BotMan logic here.
      */
+
+    protected $house_number;
+
     public function handle()
     {
         $botman = app('botman');
@@ -33,5 +36,15 @@ class BotManController extends Controller
     public function startConversation(BotMan $bot)
     {
         $bot->startConversation(new ExampleConversation());
+    }
+
+    public function howMuchDoIOwe()
+    {
+        $this->ask('Hola vecino, ¿De que casa es?, por favor escriba solo el numero', function(Answer $answer) {
+            // Save result
+            $this->house_number = $answer->getText();
+
+            $this->say('Vecino de la casa '.$this->house_number. 'usted esta al corriente');
+        });
     }
 }

@@ -13,8 +13,12 @@ class ExampleConversation extends Conversation
     /**
      * First question
      */
+    protected $house_number;
     public function askReason()
     {
+        $test = 'wuau';
+        $this->say('Guau' . $test);
+        /*
         $question = Question::create("Huh - you woke me up. What do you need?")
             ->fallback('Unable to ask question')
             ->callbackId('ask_reason')
@@ -33,6 +37,19 @@ class ExampleConversation extends Conversation
                 }
             }
         });
+        */
+    }
+
+    public function howMuchDoIOwe()
+    {
+        $this->ask('Hola vecino, ¿De que casa es?, por favor escriba solo el numero', function(Answer $answer) {
+            // Save result
+
+
+            $house_number = $answer->getText();
+
+            $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente');
+        });
     }
 
     /**
@@ -40,6 +57,6 @@ class ExampleConversation extends Conversation
      */
     public function run()
     {
-        $this->askReason();
+        $this->howMuchDoIOwe();
     }
 }
