@@ -26,12 +26,14 @@ class AddMovementConversation extends Conversation
             $this->ask('Ingrese la cantidad de el gasto', function(Answer $answer) {
                 $this->amount = $answer->getText();
 
+                /*
                 $movement = new Movement();
                 $movement->description = $this->description;
                 $movement->type = 'ingreso';
                 $movement->amount = $this->amount;
                 $movement->attatch = '';
                 $movement->save();
+                */
             });
         });
     }
