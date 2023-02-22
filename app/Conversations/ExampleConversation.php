@@ -7,6 +7,7 @@ use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
+use App\Balance;
 
 class ExampleConversation extends Conversation
 {
@@ -14,31 +15,6 @@ class ExampleConversation extends Conversation
      * First question
      */
     protected $house_number;
-    public function askReason()
-    {
-        $test = 'wuau';
-        $this->say('Guau' . $test);
-        /*
-        $question = Question::create("Huh - you woke me up. What do you need?")
-            ->fallback('Unable to ask question')
-            ->callbackId('ask_reason')
-            ->addButtons([
-                Button::create('Tell a joke')->value('joke'),
-                Button::create('Give me a fancy quote')->value('quote'),
-            ]);
-
-        return $this->ask($question, function (Answer $answer) {
-            if ($answer->isInteractiveMessageReply()) {
-                if ($answer->getValue() === 'joke') {
-                    $joke = json_decode(file_get_contents('http://api.icndb.com/jokes/random'));
-                    $this->say($joke->value->joke);
-                } else {
-                    $this->say(Inspiring::quote());
-                }
-            }
-        });
-        */
-    }
 
     public function howMuchDoIOwe()
     {
@@ -47,8 +23,20 @@ class ExampleConversation extends Conversation
 
 
             $house_number = $answer->getText();
+            $balance = Balance::where('house', intval($house_number))->first();
 
-            $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente');
+            if ($balance) {
+                if ($balance->balance < 0) {
+                   $this->say('Vecino de la casa '.$house_number. ' usted debe $' . abs($balance->balance));
+                } else if ($balance->balance == 0) {
+                    $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente.');
+                } else if ($balance->balance > 0) {
+                    $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente y hasta tiene un saldo a favor de $' . abs($balance->balance));
+                }
+                
+            } else {
+                 $this->say('No se encontro su casa, por favor ingrese solamente el numero');
+            }
         });
     }
 

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\BotManController;
 use App\Conversations\ExampleConversation;
+use App\Conversations\AddMovementConversation;
 
 $botman = resolve('botman');
 
@@ -13,14 +14,7 @@ $botman->hears('.*cuanto debo.*', function($bot) {
     $bot->startConversation(new ExampleConversation);
 });
 
-$botman->hears('Hello', function($bot) {
-    $bot->startConversation(new ExampleConversation);
+$botman->hears('admin', function($bot) {
+    $bot->startConversation(new AddMovementConversation);
 });
 
-$botman->hears('call me {name}', function ($bot, $name) {
-    $bot->reply('Your name is: '.$name);
-});
-
-$botman->hears('single response', function ($bot) {
-    $bot->reply("Tell me more!");
-});

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use BotMan\BotMan\BotMan;
 use Illuminate\Http\Request;
 use App\Conversations\ExampleConversation;
+use App\Balance;
 
 class BotManController extends Controller
 {
@@ -43,8 +44,10 @@ class BotManController extends Controller
         $this->ask('Hola vecino, ¿De que casa es?, por favor escriba solo el numero', function(Answer $answer) {
             // Save result
             $this->house_number = $answer->getText();
+            $balance = Balance::select('balance')->where('house', $this->house_number)->first();
+            //print_r($balance->balance);
 
-            $this->say('Vecino de la casa '.$this->house_number. 'usted esta al corriente');
+            $this->say('Vecino de la casa '.$balance->balance. 'usted esta al corriente');
         });
     }
 }
