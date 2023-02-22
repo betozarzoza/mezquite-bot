@@ -28,30 +28,31 @@ class AddMovementConversation extends Conversation
 
                 $movement = new Movement();
                 $movement->description = $this->description;
-                $movement->type = 'ingreso';
+                $movement->type = 'gasto';
                 $movement->amount = $this->amount;
                 $movement->attatch = '';
                 $movement->save();
+                $this->say('Gasto guardado exitosamente');
+                $this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
             });
         });
     }
 
     public function addIncome()
     {
-        $question = Question::create('Do you need a database?')
-            ->fallback('Unable to create a new database')
-            ->callbackId('create_database')
-            ->addButtons([
-                Button::create('Of course')->value('yes'),
-                Button::create('Hell no!')->value('no'),
-            ]);
+        $this->ask('Ingrese el nombre del ingreso', function(Answer $answer) {
+            $this->description = $answer->getText();
+            $this->ask('Ingrese la cantidad del ingreso', function(Answer $answer) {
+                $this->amount = $answer->getText();
 
-        $this->ask($question, function (Answer $answer) {
-            // Detect if button was clicked:
-            if ($answer->isInteractiveMessageReply()) {
-                $selectedValue = $answer->getValue(); // will be either 'yes' or 'no'
-                $selectedText = $answer->getText(); // will be either 'Of course' or 'Hell no!'
-            }
+                $movement = new Movement();
+                $movement->description = $this->description;
+                $movement->type = 'ingreso';
+                $movement->amount = $this->amount;
+                $movement->attatch = '';
+                $movement->save();
+                $this->say('Ingreso guardado exitosamente');
+            });
         });
     }
 
