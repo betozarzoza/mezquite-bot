@@ -16,22 +16,25 @@ class AddMovementConversation extends Conversation
      */
     protected $house_number;
 
+    protected $description;
+    protected $amount;
+
     public function addExpense()
     {
-        $question = Question::create('Do you need a database?')
-            ->fallback('Unable to create a new database')
-            ->callbackId('create_database')
-            ->addButtons([
-                Button::create('Of course')->value('yes'),
-                Button::create('Hell no!')->value('no'),
-            ]);
+        $this->ask('Ingrese el nombre de el gasto', function(Answer $answer) {
+            $this->description = $answer->getText();
+            $this->ask('Ingrese la cantidad de el gasto', function(Answer $answer) {
+                $this->amount = $answer->getText();
 
-        $this->ask($question, function (Answer $answer) {
-            // Detect if button was clicked:
-            if ($answer->isInteractiveMessageReply()) {
-                $selectedValue = $answer->getValue(); // will be either 'yes' or 'no'
-                $selectedText = $answer->getText(); // will be either 'Of course' or 'Hell no!'
-            }
+                $movement = new Movement();
+                $movement->description = $this->description;
+                $movement->type = 'ingreso';
+                $movement->amount = $this->amount;
+                $movement->attatch = '';
+                $movement->save();
+                $this->say('Gasto guardado exitosamente');
+                $this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
+            });
         });
     }
 
@@ -67,8 +70,14 @@ class AddMovementConversation extends Conversation
         $this->ask($question, function (Answer $answer) {
             // Detect if button was clicked:
             if ($answer->isInteractiveMessageReply()) {
-                $selectedValue = $answer->getValue(); // will be either 'yes' or 'no'
-                $this->say('Selecciono ' . $selectedValue);
+                $selectedValue = $answer->getValue(); // will be either 'gasto' or 'ingreso'
+                if ($selectedValue == 'gasto') {
+                    $this->addExpense();
+                } else if ($selectedValue == 'ingreso') {
+                    $this->addIncome();
+                } else {
+                    $this->say('Opcion invalida.');
+                }
             }
         });
     }
