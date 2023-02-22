@@ -19,7 +19,6 @@ class CreateMovementsTable extends Migration
             $table->string('description');
             $table->string('type');
             $table->bigInteger('amount');
-            $table->dateTime('created_at');
             $table->string('attatch');
         });
     }
