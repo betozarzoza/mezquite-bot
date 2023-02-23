@@ -23,8 +23,8 @@ class AddMovementConversation extends Conversation
     {
         $this->ask('Ingrese el nombre de el gasto', function(Answer $answer) {
             $this->description = $answer->getText();
-            $this->ask('Ingrese la cantidad de el gasto', function(Answer $answer) {
-                $this->amount = $answer->getText();
+            $this->ask('Ingrese la cantidad de el gasto', function(Answer $ans) {
+                $this->amount = $ans->getText();
 
                 $movement = new Movement();
                 $movement->description = $this->description;
@@ -33,7 +33,7 @@ class AddMovementConversation extends Conversation
                 $movement->attatch = '';
                 $movement->save();
                 $this->say('Gasto guardado exitosamente');
-                $this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
+                //$this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
             });
         });
     }
