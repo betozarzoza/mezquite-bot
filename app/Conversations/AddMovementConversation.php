@@ -33,7 +33,7 @@ class AddMovementConversation extends Conversation
                 $movement->attatch = '';
                 $movement->save();
                 $this->say('Gasto guardado exitosamente');
-                //$this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
+                $this->say('Gasto hecho por', '-858491783', TelegramDriver::class);
             });
         });
     }
