@@ -11,11 +11,7 @@ use App\Movement;
 
 class AddMovementConversation extends Conversation
 {
-    /**
-     * First question
-     */
     protected $house_number;
-
     protected $description;
     protected $amount;
 
