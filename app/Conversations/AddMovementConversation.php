@@ -8,6 +8,7 @@ use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use App\Movement;
+use App\General;
 
 class AddMovementConversation extends Conversation
 {
@@ -29,6 +30,7 @@ class AddMovementConversation extends Conversation
                 $movement->attatch = '';
                 $movement->save();
                 $this->say('Gasto guardado exitosamente');
+                General::where('name', 'balance')->decrement('value', $this->amount);
             });
         });
     }
@@ -47,6 +49,7 @@ class AddMovementConversation extends Conversation
                 $movement->attatch = '';
                 $movement->save();
                 $this->say('Ingreso guardado exitosamente');
+                General::where('name', 'balance')->increment('value', $this->amount);
             });
         });
     }
