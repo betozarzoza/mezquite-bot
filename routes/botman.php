@@ -6,7 +6,7 @@ use App\Conversations\GeneralOptionsConversation;
 
 $botman = resolve('botman');
 
-$botman->hears('Hola', function ($bot) {
+$botman->hears('.*opciones.*', function ($bot) {
     $bot->startConversation(new GeneralOptionsConversation);
 });
 

@@ -35,7 +35,7 @@ class AddMovementConversation extends Conversation
 
     public function addIncome()
     {
-        $this->ask('Ingrese el nombre del ingreso', function(Answer $answer) {
+        $this->ask('Ingrese el concepto del ingreso', function(Answer $answer) {
             $this->description = $answer->getText();
             $this->ask('Ingrese la cantidad del ingreso', function(Answer $answer) {
                 $this->amount = $answer->getText();
@@ -94,7 +94,7 @@ class AddMovementConversation extends Conversation
 
             $password = $answer->getText();
 
-            if ($password == 'secret') {
+            if ($password == 'secret' || $password == 'Secret') {
                $this->showOptions();
             } else {
                  $this->say('Contraseña equivocada.');
