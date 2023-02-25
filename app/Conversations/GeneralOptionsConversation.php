@@ -10,7 +10,9 @@ use BotMan\BotMan\Messages\Conversations\Conversation;
 use Carbon\Carbon;
 use App\Movement;
 use App\General;
+use App\Number;
 use App\Schedule;
+use App\Balance;
 
 class GeneralOptionsConversation extends Conversation
 {
@@ -19,6 +21,7 @@ class GeneralOptionsConversation extends Conversation
     protected $date;
     protected $hour;
     protected $duration;
+    protected $house_number;
 
     public function showMovements()
     {
@@ -83,10 +86,49 @@ class GeneralOptionsConversation extends Conversation
         });
     }
 
+    public function howMuchDoIOwe()
+    {
+        $this->ask('Hola vecino, ¿De que casa es?, por favor escriba solo el numero de la casa', function(Answer $answer) {
+            $house_number = $answer->getText();
+            $balance = Balance::where('house', intval($house_number))->first();
+
+            if ($balance) {
+                if ($balance->balance < 0) {
+                   $this->say('Vecino de la casa '.$house_number. ' usted debe $' . abs($balance->balance));
+                } else if ($balance->balance == 0) {
+                    $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente.');
+                } else if ($balance->balance > 0) {
+                    $this->say('Vecino de la casa '.$house_number. ' usted esta al corriente y hasta tiene un saldo a favor de $' . abs($balance->balance));
+                }
+                
+            } else {
+                 $this->say('No se encontro su casa, por favor ingrese solamente el numero');
+            }
+        });
+    }
+
     public function showGeneralBalance()
     {
         $balance = General::where('name', 'balance')->first();
         $this->say('El saldo de el condominio es '.$balance->value);
+    }
+
+
+    public function showAgenda()
+    {
+        $this->ask('Hola vecino, ¿De que casa quisiera saber el telefono?, por favor escriba solo el numero de la casa', function(Answer $answer) {
+            $house_number = $answer->getText();
+            $numbers = Number::where('house', intval($house_number))->get();
+
+            if (count($numbers)) {
+                foreach ($numbers as $number) {
+                  $this->say('Casa '.$house_number.' - '.$number->name);
+                  $this->say($number->number);
+                }
+            } else {
+                 $this->say('No se encontro ningun telefono asociado a esa casa.');
+            }
+        });
     }
 
     public function showOptions()
@@ -99,6 +141,8 @@ class GeneralOptionsConversation extends Conversation
                 Button::create('Saldo del Condominio')->value('balance'),
                 Button::create('Eventos programados')->value('show_events'),
                 Button::create('Agendar evento')->value('schedule_event'),
+                Button::create('Cuanto debo')->value('how_much_i_owe'),
+                Button::create('Agenda')->value('agenda'),
             ]);
 
         $this->ask($question, function (Answer $answer) {
@@ -113,6 +157,10 @@ class GeneralOptionsConversation extends Conversation
                     $this->nextSchedules();
                 } else if ($selectedValue == 'schedule_event') {
                     $this->scheduleEvent();
+                } else if ($selectedValue == 'how_much_i_owe') {
+                    $this->howMuchDoIOwe();
+                } else if ($selectedValue == 'agenda') {
+                    $this->showAgenda();
                 } else {
                     $this->say('Opcion invalida.');
                 }
