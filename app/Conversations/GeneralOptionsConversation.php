@@ -19,9 +19,11 @@ class GeneralOptionsConversation extends Conversation
     protected $description;
     protected $house;
     protected $date;
+    protected $month;
     protected $hour;
     protected $duration;
     protected $house_number;
+    protected $day;
 
     public function showMovements()
     {
@@ -46,39 +48,60 @@ class GeneralOptionsConversation extends Conversation
 
     public function scheduleEvent()
     {
-        $this->ask('Ingrese la descripcion de el evento', function(Answer $answer) {
+        $this->ask('Ingrese el nombre de el evento', function(Answer $answer) {
             $this->description = $answer->getText();
             $this->ask('¿De que casa es? Ingrese solo el numero', function(Answer $answer) {
                 $this->house = $answer->getText();
-                $this->ask('Ingrese la fecha de el evento en este formato: AAAA-MM-DD', function(Answer $answer) {
-                    $this->date = $answer->getText();
-                    $this->ask('Ingrese la hora de el evento en este formato HH:MM', function(Answer $answer) {
-                        $this->hour = $answer->getText();
-                        $this->ask('Ingrese la duracion de el evento en horas', function(Answer $answer) {
-                            $this->duration = $answer->getText();
-                                $dt = Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00');
-                                $this->ask('Confirma que desea agendar un evento para el dia '. $dt->toDayDateTimeString().'? Si/No', function(Answer $answer) {
-                                    if ($answer->getText() == 'Si' || $answer->getText() == 'si') {
-                                        $from_date = (Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00'));
-                                        $to_date =   (Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00')->addHours($this->duration));
-                                        $count =  Schedule::whereBetween('date', [$from_date, $to_date])->count();
-                                        if ($count > 0) {
-                                            $this->say('No se puede agendar ese dia porque hay un evento agendado, te mostrare los proximos eventos.');
-                                            $this->nextSchedules();
-                                        } else {
-                                            $schedule = new Schedule();
-                                            $schedule->description = $this->description;
-                                            $schedule->house = $this->house;
-                                            $schedule->date = $this->date . ' ' . $this->hour.':00';
-                                            $schedule->duration = $this->duration;
-                                            $schedule->save();
-                                            $this->say('Evento agendado exitosamente, disfrute su evento vecino!');
+                $question = Question::create('¿Que mes quiere hacer el evento?')
+                ->fallback('No puedo ayudarle')
+                ->callbackId('canthelp')
+                ->addButtons([
+                    Button::create('Enero')->value('01'),
+                    Button::create('Febrero')->value('02'),
+                    Button::create('Marzo')->value('03'),
+                    Button::create('Abril')->value('04'),
+                    Button::create('Mayo')->value('05'),
+                    Button::create('Junio')->value('06'),
+                    Button::create('Julio')->value('07'),
+                    Button::create('Agosto')->value('08'),
+                    Button::create('Septiembre')->value('09'),
+                    Button::create('Octubre')->value('10'),
+                    Button::create('Noviembre')->value('11'),
+                    Button::create('Diciembre')->value('12'),
+                ]);
+                $this->ask($question, function(Answer $answer) {
+                    $this->month = $answer->getText();
+                    $this->ask('Ingrese el dia de el evento en numero', function(Answer $answer) {
+                        $this->day = strlen($answer->getText()) > 1 ? $answer->getText() : '0'.$answer->getText();
+                        $this->say('2023-'.$this->month.'-'.$this->day);
+                        $this->ask('Ingrese la hora de el evento en este formato HH:MM (24hrs), ejemplo: 17:00 para las cinco de la tarde.', function(Answer $answer) {
+                            $this->hour = $answer->getText();
+                            $this->ask('Ingrese la duracion de el evento en horas (Solo un numero, ejemplo: 2 para dos horas.)', function(Answer $answer) {
+                                $this->duration = $answer->getText();
+                                    $dt = Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00');
+                                    $this->ask('Confirma que desea agendar un evento para el dia '. $dt->toDayDateTimeString().'? Si/No', function(Answer $answer) {
+                                        if ($answer->getText() == 'Si' || $answer->getText() == 'si') {
+                                            $from_date = (Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00'));
+                                            $to_date =   (Carbon::createFromFormat('Y-m-d H:i:s',  $this->date . ' ' . $this->hour.':00')->addHours($this->duration));
+                                            $count =  Schedule::whereBetween('date', [$from_date, $to_date])->count();
+                                            if ($count > 0) {
+                                                $this->say('No se puede agendar ese dia porque hay un evento agendado, te mostrare los proximos eventos.');
+                                                $this->nextSchedules();
+                                            } else {
+                                                $schedule = new Schedule();
+                                                $schedule->description = $this->description;
+                                                $schedule->house = $this->house;
+                                                $schedule->date = $this->date . ' ' . $this->hour.':00';
+                                                $schedule->duration = $this->duration;
+                                                $schedule->save();
+                                                $this->say('Evento agendado exitosamente, disfrute su evento vecino!');
+                                            }
+                                        } else if ($answer->getText() == 'No' || $answer->getText() == 'no') {
+                                            $this->say('Evento por agendar cancelado');
+                                            $this->showOptions();
                                         }
-                                    } else if ($answer->getText() == 'No' || $answer->getText() == 'no') {
-                                        $this->say('Evento por agendar cancelado');
-                                        $this->showOptions();
-                                    }
-                                });
+                                    });
+                            });
                         });
                     });
                 });
@@ -142,7 +165,7 @@ class GeneralOptionsConversation extends Conversation
                 Button::create('Eventos programados')->value('show_events'),
                 Button::create('Agendar evento')->value('schedule_event'),
                 Button::create('Cuanto debo')->value('how_much_i_owe'),
-                Button::create('Agenda')->value('agenda'),
+                Button::create('Contactos de vecinos')->value('agenda'),
             ]);
 
         $this->ask($question, function (Answer $answer) {
