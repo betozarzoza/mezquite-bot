@@ -3,7 +3,7 @@
 namespace App\Conversations;
 
 use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -156,7 +156,16 @@ class GeneralOptionsConversation extends Conversation
     }
 
     public function openGate () {
+        $client = new Client([
+            // Base URI is used with relative requests
+            'base_uri' => 'http://httpbin.org',
+            // You can set any number of default request options.
+            'timeout'  => 2.0,
+        ]);
+        $response = $client->request('GET', 'https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
+        /*
         Http::get(' https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
+        */
         $this->say('Abriendo porton...');
     }
 
