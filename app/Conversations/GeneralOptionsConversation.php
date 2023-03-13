@@ -3,6 +3,7 @@
 namespace App\Conversations;
 
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Http;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
@@ -154,18 +155,24 @@ class GeneralOptionsConversation extends Conversation
         });
     }
 
+    public function openGate () {
+        Http::get(' https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
+        $this->say('Abriendo porton...');
+    }
+
     public function showOptions()
     {
         $question = Question::create('Hola vecino, ¿En que le puedo ayudar?')
             ->fallback('No puedo ayudarle')
             ->callbackId('canthelp')
             ->addButtons([
-                Button::create('Mostrar movimientos')->value('movements'),
-                Button::create('Saldo del Condominio')->value('balance'),
-                Button::create('Eventos programados')->value('show_events'),
-                Button::create('Agendar evento')->value('schedule_event'),
-                Button::create('Cuanto debo')->value('how_much_i_owe'),
-                Button::create('Contactos de vecinos')->value('agenda'),
+                Button::create('Abrir porton')->value('open_gate'),
+                //Button::create('Mostrar movimientos')->value('movements'),
+                //Button::create('Saldo del Condominio')->value('balance'),
+                //Button::create('Eventos programados')->value('show_events'),
+                //Button::create('Agendar evento')->value('schedule_event'),
+                //Button::create('Cuanto debo')->value('how_much_i_owe'),
+                //Button::create('Contactos de vecinos')->value('agenda'),
             ]);
 
         $this->ask($question, function (Answer $answer) {
@@ -184,6 +191,8 @@ class GeneralOptionsConversation extends Conversation
                     $this->howMuchDoIOwe();
                 } else if ($selectedValue == 'agenda') {
                     $this->showAgenda();
+                } else if ($selectedValue == 'open_gate') {
+                    $this->openGate();
                 } else {
                     $this->say('Opcion invalida.');
                 }
