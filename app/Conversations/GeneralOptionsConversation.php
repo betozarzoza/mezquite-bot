@@ -162,7 +162,7 @@ class GeneralOptionsConversation extends Conversation
             // You can set any number of default request options.
             'timeout'  => 2.0,
         ]);
-        $response = $client->request('GET', 'https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
+        //$response = $client->request('GET', 'https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
         /*
         Http::get(' https://www.virtualsmarthome.xyz/url_routine_trigger/activate.php?trigger=d8836335-b02b-436b-90d2-f8b2d2f2ed22&token=24c60b0f-ff93-43b0-8cd7-83af818096c9&response=json');
         */
@@ -175,7 +175,7 @@ class GeneralOptionsConversation extends Conversation
             ->fallback('No puedo ayudarle')
             ->callbackId('canthelp')
             ->addButtons([
-                Button::create('Abrir porton')->value('open_gate'),
+                //Button::create('Abrir porton')->value('open_gate'),
                 //Button::create('Mostrar movimientos')->value('movements'),
                 //Button::create('Saldo del Condominio')->value('balance'),
                 //Button::create('Eventos programados')->value('show_events'),
